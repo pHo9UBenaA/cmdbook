@@ -1,0 +1,15 @@
+version: "3"
+
+tasks:
+  build:
+    cmds:
+      - go build cmd/cmdbook/cb.go
+  install:
+    cmds:
+      - go install cmd/cmdbook/cb.go
+  fmt:
+    cmds:
+      - gofmt -w -l .
+  vet:
+    cmds:
+      - go vet ./...
