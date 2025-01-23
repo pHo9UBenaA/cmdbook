@@ -1,7 +1,3 @@
-Here's a professional English README without emojis:
-
----
-
 # cmdbook - CLI Command Manager
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/pHo9UBenaA/cmdbook)](https://goreportcard.com/report/github.com/pHo9UBenaA/cmdbook)
