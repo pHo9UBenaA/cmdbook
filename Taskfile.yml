@@ -3,19 +3,13 @@ version: "3"
 tasks:
   build:
     cmds:
-      - go build cb.go
+      - go build cmd/cmdbook/cb.go
   install:
     cmds:
-      - go install cb.go
+      - go install cmd/cmdbook/cb.go
   fmt:
     cmds:
-      - gofmt -w -l main.go
-  goimports:
-    cmds:
-      - goimports -w -l main.go
+      - gofmt -w -l .
   vet:
     cmds:
-      - go vet .
-  staticcheck:
-    cmds:
-      - staticcheck main.go
+      - go vet ./...
