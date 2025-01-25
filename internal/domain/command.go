@@ -1,11 +1,5 @@
 package domain
 
-type CommandEntry struct {
-	Prefix  string
-	Short   string
-	Command string
-}
-
 func GroupCommands(commands map[string]map[string]string) map[string][]CommandEntry {
 	grouped := make(map[string][]CommandEntry)
 	for prefix, cmds := range commands {

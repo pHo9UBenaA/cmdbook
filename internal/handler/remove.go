@@ -18,7 +18,7 @@ func RemoveCommand(configPath, prefix, shortCmd string) error {
 	}
 
 	if _, ok := cmds[shortCmd]; !ok {
-		return fmt.Errorf("command not found: %s/%s", prefix, shortCmd)
+		return fmt.Errorf("command not found: %s %s", prefix, shortCmd)
 	}
 
 	delete(cmds, shortCmd)
@@ -30,6 +30,6 @@ func RemoveCommand(configPath, prefix, shortCmd string) error {
 		return fmt.Errorf("failed to save configuration: %w", err)
 	}
 
-	fmt.Printf("Removed: %s/%s\n", prefix, shortCmd)
+	fmt.Printf("Removed: %s %s ", prefix, shortCmd)
 	return nil
 }

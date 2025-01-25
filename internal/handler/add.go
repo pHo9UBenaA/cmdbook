@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/pHo9UBenaA/cmdbook/internal/config"
+	"github.com/pHo9UBenaA/cmdbook/internal/constant"
 )
 
 func AddCommand(configPath, prefix, short, command string) error {
@@ -19,13 +20,12 @@ func AddCommand(configPath, prefix, short, command string) error {
 
 	if short == "" {
 		existing := cfg.Commands[prefix]
-		for i := 0; ; i++ {
-			candidate := fmt.Sprintf("cmd%d", i)
-			if _, exists := existing[candidate]; !exists {
-				short = candidate
-				break
-			}
-		}
+		nextIndex := len(existing)
+		short = fmt.Sprintf("cmd%d", nextIndex)
+	}
+
+	if len(short) > constant.MaxShortLen {
+		return fmt.Errorf("short name '%s' exceeds maximum length of 20 characters", short)
 	}
 
 	if cfg.Commands[prefix] == nil {
@@ -37,6 +37,6 @@ func AddCommand(configPath, prefix, short, command string) error {
 		return err
 	}
 
-	fmt.Printf("Added: %s/%s -> %s\n", prefix, short, command)
+	fmt.Printf("Added: %s %s -> %s ", prefix, short, command)
 	return nil
 }
