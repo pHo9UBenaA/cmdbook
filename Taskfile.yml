@@ -7,6 +7,9 @@ tasks:
   install:
     cmds:
       - go install cmd/cmdbook/cb.go
+  test:
+    cmds:
+      - go test -v ./...
   fmt:
     cmds:
       - gofmt -w -l .

@@ -5,8 +5,6 @@
 
 A terminal productivity tool for managing frequently used commands with shortcut aliases.
 
-![demo](https://raw.githubusercontent.com/pHo9UBenaA/cmdbook/main/assets/demo.gif)
-
 ## Key Features
 - **Command Shortcut Management**
   - Store commands with custom aliases
@@ -62,12 +60,6 @@ cb remove git push-main
 
 ## Configuration File
 Commands are stored in `~/.cmdbook.toml`:
-
-## Dependencies
-- [Cobra](https://github.com/spf13/cobra) - CLI framework
-- [go-toml](https://github.com/pelletier/go-toml) - TOML configuration handling
-- [keyboard](https://github.com/eiannone/keyboard) - Keyboard input handling
-- [term](https://pkg.go.dev/golang.org/x/term) - Terminal handling
 
 ## License
 MIT License - See [LICENSE](LICENSE) for details.
