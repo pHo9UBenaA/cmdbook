@@ -99,15 +99,15 @@ func TestGroupCommands(t *testing.T) {
 
 func TestPrepareInteractiveEntries(t *testing.T) {
 	tests := []struct {
-		name          string
-		grouped       map[string][]CommandEntry
-		expectedOrder []CommandEntry // Headers in expected order
+		name           string
+		grouped        map[string][]CommandEntry
+		expectedOrder  []CommandEntry // Headers in expected order
 		expectedGroups map[string][]CommandEntry
 	}{
 		{
-			name:          "empty grouped",
-			grouped:       map[string][]CommandEntry{},
-			expectedOrder: []CommandEntry{},
+			name:           "empty grouped",
+			grouped:        map[string][]CommandEntry{},
+			expectedOrder:  []CommandEntry{},
 			expectedGroups: map[string][]CommandEntry{},
 		},
 		{

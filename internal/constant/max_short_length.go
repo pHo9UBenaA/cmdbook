@@ -1,3 +1,3 @@
 package constant
 
-const MaxShortLen = 20;
+const MaxShortLen = 20

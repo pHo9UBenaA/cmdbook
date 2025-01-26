@@ -70,7 +70,7 @@ func updateCmd() *cobra.Command {
 	const (
 		oldPrefixIndex   = 0
 		oldShortCmdIndex = 1
-		argsNum       = 2
+		argsNum          = 2
 	)
 
 	cmd := &cobra.Command{
