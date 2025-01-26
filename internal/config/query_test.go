@@ -1,8 +1,10 @@
-package config
+package config_test
 
 import (
 	"sort"
 	"testing"
+
+	"github.com/pHo9UBenaA/cmdbook/internal/config"
 )
 
 func TestConfig_GetRegisteredPrefixes(t *testing.T) {
@@ -34,7 +36,7 @@ func TestConfig_GetRegisteredPrefixes(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := &Config{
+			cfg := &config.Config{
 				Commands: tt.commands,
 			}
 			got := cfg.GetRegisteredPrefixes()
@@ -105,7 +107,7 @@ func TestConfig_GetRegisteredShortcutsByPrefix(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			cfg := &Config{
+			cfg := &config.Config{
 				Commands: tt.commands,
 			}
 			got := cfg.GetRegisteredShortcutsByPrefix(tt.prefix)

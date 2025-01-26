@@ -1,10 +1,11 @@
-package handler
+package handler_test
 
 import (
 	"os"
 	"testing"
 
 	"github.com/pHo9UBenaA/cmdbook/internal/config"
+	"github.com/pHo9UBenaA/cmdbook/internal/handler"
 )
 
 func TestAddCommand(t *testing.T) {
@@ -84,7 +85,7 @@ func TestAddCommand(t *testing.T) {
 			}
 
 			// Run the function under test
-			err = AddCommand(tempFile.Name(), tt.prefix, tt.short, tt.command)
+			err = handler.AddCommand(tempFile.Name(), tt.prefix, tt.short, tt.command)
 
 			// Check for expected error
 			if (err != nil) != (tt.expectedError != nil) {

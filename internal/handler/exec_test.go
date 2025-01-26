@@ -1,8 +1,10 @@
-package handler
+package handler_test
 
 import (
 	"os"
 	"testing"
+
+	"github.com/pHo9UBenaA/cmdbook/internal/handler"
 )
 
 // Helper function to create a temporary configuration file
@@ -102,7 +104,7 @@ fail = "exit 1"
 			}
 
 			// Execute the function
-			err = ExecCommand(configPath, tt.prefix, tt.short)
+			err = handler.ExecCommand(configPath, tt.prefix, tt.short)
 
 			// Validate the error
 			if (err != nil && err.Error() != tt.expectedError) || (err == nil && tt.expectedError != "") {

@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/pHo9UBenaA/cmdbook/internal/constant"
 	"github.com/pHo9UBenaA/cmdbook/internal/domain"
 	"golang.org/x/term"
-	"github.com/pHo9UBenaA/cmdbook/internal/constant"
 )
 
 const (
-	AnsiReset   = "\033[0m"
-	AnsiCyan    = "\033[1;36m"
-	AnsiGreen   = "\033[1;32m"
-	AnsiRed     = "\033[1;31m"
+	AnsiReset = "\033[0m"
+	AnsiCyan  = "\033[1;36m"
+	AnsiGreen = "\033[1;32m"
+	AnsiRed   = "\033[1;31m"
 )
 
 func PrintInteractiveList(entries []domain.CommandEntry, pageSize, offset int) int {

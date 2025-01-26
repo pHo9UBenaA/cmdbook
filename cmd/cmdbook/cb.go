@@ -26,6 +26,7 @@ func main() {
 
 	rootCmd.AddCommand(
 		addCmd(),
+		updateCmd(),
 		execCmd(),
 		removeCmd(),
 		listCmd(),
@@ -42,9 +43,10 @@ func addCmd() *cobra.Command {
 	const commandIndex = 0
 
 	cmd := &cobra.Command{
-		Use:   "add <command>",
-		Short: "Add a new command",
-		Args:  cobra.ExactArgs(1),
+		Use:     "add <command>",
+		Aliases: []string{"a"},
+		Short:   "Add a new command",
+		Args:    cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := handler.AddCommand(configPath, prefix, short, args[commandIndex]); err != nil {
 				fmt.Println("Error:", err)
@@ -53,12 +55,63 @@ func addCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&short, "short", "s", "", "Short command name")
-	cmd.Flags().StringVarP(&prefix, "prefix", "p", "", "Command prefix")
+	cmd.Flags().StringVarP(&short, "short", "S", "", "Short command name")
+	cmd.Flags().StringVarP(&prefix, "prefix", "P", "", "Command prefix")
 
 	cmd.RegisterFlagCompletionFunc("prefix", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return getPrefixes(), cobra.ShellCompDirectiveNoFileComp
 	})
+
+	return cmd
+}
+
+func updateCmd() *cobra.Command {
+	var newPrefix, newShort, newCommand string
+
+	const (
+		oldPrefixIndex   = 0
+		oldShortCmdIndex = 1
+		argsNum          = 2
+	)
+
+	cmd := &cobra.Command{
+		Use:     "update <prefix> <short>",
+		Aliases: []string{"u"},
+		Short:   "Update an existing command",
+		Args:    cobra.ExactArgs(argsNum),
+		Run: func(cmd *cobra.Command, args []string) {
+			oldPrefix := args[oldPrefixIndex]
+			oldShort := args[oldShortCmdIndex]
+
+			if cmd.Flags().Changed("new-command") && newCommand == "" {
+				fmt.Println("Error: new command cannot be empty")
+				os.Exit(1)
+			}
+
+			if err := handler.UpdateCommand(configPath, oldPrefix, oldShort, newPrefix, newShort, newCommand); err != nil {
+				fmt.Println("Error:", err)
+				os.Exit(1)
+			}
+		},
+	}
+
+	cmd.Flags().StringVarP(&newPrefix, "new-prefix", "P", "", "New prefix for the command")
+	cmd.Flags().StringVarP(&newShort, "new-short", "S", "", "New short name for the command")
+	cmd.Flags().StringVarP(&newCommand, "new-command", "C", "", "New command content")
+
+	cmd.RegisterFlagCompletionFunc("new-prefix", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return getPrefixes(), cobra.ShellCompDirectiveNoFileComp
+	})
+
+	cmd.ValidArgsFunction = func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		if len(args) == oldPrefixIndex {
+			return getPrefixes(), cobra.ShellCompDirectiveNoFileComp
+		}
+		if len(args) == oldShortCmdIndex {
+			return getShorts(args[oldPrefixIndex]), cobra.ShellCompDirectiveNoFileComp
+		}
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
 
 	return cmd
 }
@@ -71,9 +124,10 @@ func execCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "exec <prefix> <short-cmd>",
-		Short: "Execute a command",
-		Args:  cobra.ExactArgs(argsNum),
+		Use:     "exec <prefix> <short-cmd>",
+		Aliases: []string{"e"},
+		Short:   "Execute a command",
+		Args:    cobra.ExactArgs(argsNum),
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := handler.ExecCommand(configPath, args[prefixIndex], args[shortCmdIndex]); err != nil {
 				fmt.Println("Error:", err)
@@ -103,9 +157,10 @@ func removeCmd() *cobra.Command {
 	)
 
 	cmd := &cobra.Command{
-		Use:   "remove <prefix> <short-cmd>",
-		Short: "Remove a command",
-		Args:  cobra.ExactArgs(argsNum),
+		Use:     "remove <prefix> <short-cmd>",
+		Aliases: []string{"r", "rm"},
+		Short:   "Remove a command",
+		Args:    cobra.ExactArgs(argsNum),
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := handler.RemoveCommand(configPath, args[prefixIndex], args[shortCmdIndex]); err != nil {
 				fmt.Println("Error:", err)
@@ -129,8 +184,9 @@ func removeCmd() *cobra.Command {
 
 func listCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "list",
-		Short: "List commands with interactive viewer",
+		Use:     "list",
+		Aliases: []string{"l", "ls"},
+		Short:   "List commands with interactive viewer",
 		Run: func(cmd *cobra.Command, args []string) {
 			if err := handler.ListCommands(configPath); err != nil {
 				fmt.Println("Error:", err)

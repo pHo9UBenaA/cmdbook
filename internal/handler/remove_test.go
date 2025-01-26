@@ -1,4 +1,4 @@
-package handler
+package handler_test
 
 import (
 	"os"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/pHo9UBenaA/cmdbook/internal/config"
+	"github.com/pHo9UBenaA/cmdbook/internal/handler"
 )
 
 func TestRemoveCommand(t *testing.T) {
@@ -29,16 +30,16 @@ func TestRemoveCommand(t *testing.T) {
 		validate      func(t *testing.T)
 	}{
 		{
-			name:          "successful removal of command with remaining prefix",
+			name: "successful removal of command with remaining prefix",
 			initialConfig: `
 				[commands.prefix1]
 				command1 = "cmd1"
 				command2 = "cmd2"
 			`,
-			configPath:    configPath,
-			prefix:        "prefix1",
-			shortCmd:      "command1",
-			expectError:   "",
+			configPath:  configPath,
+			prefix:      "prefix1",
+			shortCmd:    "command1",
+			expectError: "",
 			validate: func(t *testing.T) {
 				cfg, err := config.LoadConfig(configPath)
 				if err != nil {
@@ -53,15 +54,15 @@ func TestRemoveCommand(t *testing.T) {
 			},
 		},
 		{
-			name:          "successful removal of command with empty prefix",
+			name: "successful removal of command with empty prefix",
 			initialConfig: `
 				[commands.prefix1]
 				command1 = "cmd1"
 			`,
-			configPath:    configPath,
-			prefix:        "prefix1",
-			shortCmd:      "command1",
-			expectError:   "",
+			configPath:  configPath,
+			prefix:      "prefix1",
+			shortCmd:    "command1",
+			expectError: "",
 			validate: func(t *testing.T) {
 				cfg, err := config.LoadConfig(configPath)
 				if err != nil {
@@ -73,46 +74,46 @@ func TestRemoveCommand(t *testing.T) {
 			},
 		},
 		{
-			name:          "prefix does not exist",
+			name: "prefix does not exist",
 			initialConfig: `
 				[commands.prefix1]
 				command1 = "cmd1"
 			`,
-			configPath:    configPath,
-			prefix:        "nonexistent",
-			shortCmd:      "command1",
-			expectError:   "prefix does not exist: nonexistent",
-		},
-		{
-			name:          "command does not exist in prefix",
-			initialConfig: `
-				[commands.prefix1]
-				command1 = "cmd1"
-			`,
-			configPath:    configPath,
-			prefix:        "prefix1",
-			shortCmd:      "nonexistent",
-			expectError:   "command not found: prefix1 nonexistent",
-		},
-		{
-			name:        "configuration file does not exist",
-			configPath:  filepath.Join(tempDir, "nonexistent.toml"),
-			prefix:      "prefix1",
+			configPath:  configPath,
+			prefix:      "nonexistent",
 			shortCmd:    "command1",
+			expectError: "prefix does not exist: nonexistent",
+		},
+		{
+			name: "command does not exist in prefix",
+			initialConfig: `
+				[commands.prefix1]
+				command1 = "cmd1"
+			`,
+			configPath:  configPath,
+			prefix:      "prefix1",
+			shortCmd:    "nonexistent",
+			expectError: "command not found: prefix1 nonexistent",
+		},
+		{
+			name:       "configuration file does not exist",
+			configPath: filepath.Join(tempDir, "nonexistent.toml"),
+			prefix:     "prefix1",
+			shortCmd:   "command1",
 			// ファイルが存在しない場合にローダーでエラーが出ないようになっているため
 			expectError: "prefix does not exist: prefix1",
 		},
 		{
-			name:          "failed to save configuration",
+			name: "failed to save configuration",
 			initialConfig: `
 				[commands.prefix1]
 				command1 = "cmd1"
 			`,
-			configPath:    "/invalid/path/config.toml",
-			prefix:        "prefix1",
-			shortCmd:      "command1",
+			configPath: "/invalid/path/config.toml",
+			prefix:     "prefix1",
+			shortCmd:   "command1",
 			// ファイルが存在しない場合にローダーでエラーが出ないようになっているため
-			expectError:   "prefix does not exist: prefix1",
+			expectError: "prefix does not exist: prefix1",
 		},
 	}
 
@@ -122,7 +123,7 @@ func TestRemoveCommand(t *testing.T) {
 				writeConfig(tt.initialConfig)
 			}
 
-			err := RemoveCommand(tt.configPath, tt.prefix, tt.shortCmd)
+			err := handler.RemoveCommand(tt.configPath, tt.prefix, tt.shortCmd)
 
 			// Check error
 			if tt.expectError == "" && err != nil {
