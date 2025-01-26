@@ -53,8 +53,8 @@ func addCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&short, "short", "s", "", "Short command name")
-	cmd.Flags().StringVarP(&prefix, "prefix", "p", "", "Command prefix")
+	cmd.Flags().StringVarP(&short, "short", "S", "", "Short command name")
+	cmd.Flags().StringVarP(&prefix, "prefix", "P", "", "Command prefix")
 
 	cmd.RegisterFlagCompletionFunc("prefix", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return getPrefixes(), cobra.ShellCompDirectiveNoFileComp
