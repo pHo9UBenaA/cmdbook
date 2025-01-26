@@ -1,27 +1,29 @@
-package domain
+package domain_test
 
 import (
 	"sort"
 	"testing"
+
+	"github.com/pHo9UBenaA/cmdbook/internal/domain"
 )
 
 func TestGroupCommands(t *testing.T) {
 	tests := []struct {
 		name     string
 		commands map[string]map[string]string
-		expected map[string][]CommandEntry
+		expected map[string][]domain.CommandEntry
 	}{
 		{
 			name:     "empty commands",
 			commands: map[string]map[string]string{},
-			expected: map[string][]CommandEntry{},
+			expected: map[string][]domain.CommandEntry{},
 		},
 		{
 			name: "single prefix with one shortcut",
 			commands: map[string]map[string]string{
 				"p1": {"s1": "cmd1"},
 			},
-			expected: map[string][]CommandEntry{
+			expected: map[string][]domain.CommandEntry{
 				"p1": {{Prefix: "p1", Short: "s1", Command: "cmd1"}},
 			},
 		},
@@ -30,7 +32,7 @@ func TestGroupCommands(t *testing.T) {
 			commands: map[string]map[string]string{
 				"p1": {"s2": "cmd2", "s1": "cmd1"},
 			},
-			expected: map[string][]CommandEntry{
+			expected: map[string][]domain.CommandEntry{
 				"p1": {
 					{Prefix: "p1", Short: "s1", Command: "cmd1"},
 					{Prefix: "p1", Short: "s2", Command: "cmd2"},
@@ -43,7 +45,7 @@ func TestGroupCommands(t *testing.T) {
 				"p1": {"s1": "cmd1"},
 				"p2": {"s3": "cmd3"},
 			},
-			expected: map[string][]CommandEntry{
+			expected: map[string][]domain.CommandEntry{
 				"p1": {{Prefix: "p1", Short: "s1", Command: "cmd1"}},
 				"p2": {{Prefix: "p2", Short: "s3", Command: "cmd3"}},
 			},
@@ -53,7 +55,7 @@ func TestGroupCommands(t *testing.T) {
 			commands: map[string]map[string]string{
 				"p1": {},
 			},
-			expected: map[string][]CommandEntry{
+			expected: map[string][]domain.CommandEntry{
 				"p1": {},
 			},
 		},
@@ -61,7 +63,7 @@ func TestGroupCommands(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := GroupCommands(tt.commands)
+			got := domain.GroupCommands(tt.commands)
 
 			if len(got) != len(tt.expected) {
 				t.Fatalf("expected %d groups, got %d", len(tt.expected), len(got))
@@ -100,50 +102,50 @@ func TestGroupCommands(t *testing.T) {
 func TestPrepareInteractiveEntries(t *testing.T) {
 	tests := []struct {
 		name           string
-		grouped        map[string][]CommandEntry
-		expectedOrder  []CommandEntry // Headers in expected order
-		expectedGroups map[string][]CommandEntry
+		grouped        map[string][]domain.CommandEntry
+		expectedOrder  []domain.CommandEntry // Headers in expected order
+		expectedGroups map[string][]domain.CommandEntry
 	}{
 		{
 			name:           "empty grouped",
-			grouped:        map[string][]CommandEntry{},
-			expectedOrder:  []CommandEntry{},
-			expectedGroups: map[string][]CommandEntry{},
+			grouped:        map[string][]domain.CommandEntry{},
+			expectedOrder:  []domain.CommandEntry{},
+			expectedGroups: map[string][]domain.CommandEntry{},
 		},
 		{
 			name: "single prefix with no commands",
-			grouped: map[string][]CommandEntry{
+			grouped: map[string][]domain.CommandEntry{
 				"p1": {},
 			},
-			expectedOrder: []CommandEntry{{Prefix: "p1"}},
-			expectedGroups: map[string][]CommandEntry{
+			expectedOrder: []domain.CommandEntry{{Prefix: "p1"}},
+			expectedGroups: map[string][]domain.CommandEntry{
 				"p1": {{Prefix: "p1"}},
 			},
 		},
 		{
 			name: "single prefix with nil commands slice",
-			grouped: map[string][]CommandEntry{
+			grouped: map[string][]domain.CommandEntry{
 				"p1": nil,
 			},
-			expectedOrder: []CommandEntry{{Prefix: "p1"}},
-			expectedGroups: map[string][]CommandEntry{
+			expectedOrder: []domain.CommandEntry{{Prefix: "p1"}},
+			expectedGroups: map[string][]domain.CommandEntry{
 				"p1": {{Prefix: "p1"}},
 			},
 		},
 		{
 			name: "single prefix with multiple commands",
-			grouped: map[string][]CommandEntry{
+			grouped: map[string][]domain.CommandEntry{
 				"p1": {
 					{Prefix: "p1", Short: "s2", Command: "cmd2"},
 					{Prefix: "p1", Short: "s1", Command: "cmd1"},
 				},
 			},
-			expectedOrder: []CommandEntry{
+			expectedOrder: []domain.CommandEntry{
 				{Prefix: "p1"},
 				{Prefix: "p1", Short: "s1", Command: "cmd1"},
 				{Prefix: "p1", Short: "s2", Command: "cmd2"},
 			},
-			expectedGroups: map[string][]CommandEntry{
+			expectedGroups: map[string][]domain.CommandEntry{
 				"p1": {
 					{Prefix: "p1"},
 					{Prefix: "p1", Short: "s1", Command: "cmd1"},
@@ -153,7 +155,7 @@ func TestPrepareInteractiveEntries(t *testing.T) {
 		},
 		{
 			name: "multiple prefixes",
-			grouped: map[string][]CommandEntry{
+			grouped: map[string][]domain.CommandEntry{
 				"p1": {
 					{Prefix: "p1", Short: "s1", Command: "cmd1"},
 				},
@@ -161,7 +163,7 @@ func TestPrepareInteractiveEntries(t *testing.T) {
 					{Prefix: "p2", Short: "s3", Command: "cmd3"},
 				},
 			},
-			expectedGroups: map[string][]CommandEntry{
+			expectedGroups: map[string][]domain.CommandEntry{
 				"p1": {
 					{Prefix: "p1"},
 					{Prefix: "p1", Short: "s1", Command: "cmd1"},
@@ -176,10 +178,10 @@ func TestPrepareInteractiveEntries(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := PrepareInteractiveEntries(tt.grouped)
+			got := domain.PrepareInteractiveEntries(tt.grouped)
 
 			// Build actual groups from the output
-			actualGroups := make(map[string][]CommandEntry)
+			actualGroups := make(map[string][]domain.CommandEntry)
 			var currentPrefix string
 			for _, entry := range got {
 				if entry.Short == "" && entry.Command == "" {

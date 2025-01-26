@@ -1,10 +1,11 @@
-package handler
+package handler_test
 
 import (
 	"os"
 	"testing"
 
 	"github.com/pHo9UBenaA/cmdbook/internal/config"
+	"github.com/pHo9UBenaA/cmdbook/internal/handler"
 )
 
 func TestUpdateCommand(t *testing.T) {
@@ -159,7 +160,7 @@ func TestUpdateCommand(t *testing.T) {
 				}
 			}
 
-			err = UpdateCommand(tempFile.Name(), tt.oldPrefix, tt.oldShort, tt.newPrefix, tt.newShort, tt.newCommand)
+			err = handler.UpdateCommand(tempFile.Name(), tt.oldPrefix, tt.oldShort, tt.newPrefix, tt.newShort, tt.newCommand)
 
 			if tt.expectedError != "" {
 				if err == nil || err.Error() != tt.expectedError {

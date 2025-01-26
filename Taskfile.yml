@@ -16,3 +16,6 @@ tasks:
   vet:
     cmds:
       - go vet ./...
+  govulncheck:
+    cmds:
+      - govulncheck ./...

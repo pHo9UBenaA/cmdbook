@@ -1,4 +1,4 @@
-package handler
+package handler_test
 
 import (
 	"os"
@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/pHo9UBenaA/cmdbook/internal/config"
+	"github.com/pHo9UBenaA/cmdbook/internal/handler"
 )
 
 func TestRemoveCommand(t *testing.T) {
@@ -122,7 +123,7 @@ func TestRemoveCommand(t *testing.T) {
 				writeConfig(tt.initialConfig)
 			}
 
-			err := RemoveCommand(tt.configPath, tt.prefix, tt.shortCmd)
+			err := handler.RemoveCommand(tt.configPath, tt.prefix, tt.shortCmd)
 
 			// Check error
 			if tt.expectError == "" && err != nil {

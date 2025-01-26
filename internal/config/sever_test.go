@@ -1,21 +1,23 @@
-package config
+package config_test
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/pHo9UBenaA/cmdbook/internal/config"
 )
 
 func TestSaveConfig(t *testing.T) {
 	tests := []struct {
 		name    string
-		cfg     *Config
+		cfg     *config.Config
 		setup   func(t *testing.T) string
 		wantErr bool
 	}{
 		{
 			name: "successful save",
-			cfg: &Config{
+			cfg: &config.Config{
 				Commands: map[string]map[string]string{
 					"test": {"action": "echo hello"},
 				},
@@ -35,7 +37,7 @@ func TestSaveConfig(t *testing.T) {
 		},
 		{
 			name: "write error (path is directory)",
-			cfg: &Config{
+			cfg: &config.Config{
 				Commands: map[string]map[string]string{},
 			},
 			setup: func(t *testing.T) string {
@@ -53,14 +55,14 @@ func TestSaveConfig(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			path := tt.setup(t)
-			err := SaveConfig(tt.cfg, path)
+			err := config.SaveConfig(tt.cfg, path)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SaveConfig() error = %v, wantErr %v", err, tt.wantErr)
 			}
 
 			if !tt.wantErr && tt.cfg != nil {
-				loaded, err := LoadConfig(path)
+				loaded, err := config.LoadConfig(path)
 				if err != nil {
 					t.Fatalf("failed to load saved config: %v", err)
 				}
